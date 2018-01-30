@@ -39,12 +39,12 @@ angular.module("TodoApp").factory("ItemFactory", ($q, FBUrl, $http) => {
     function getTodoItems() {
         return $q((resolve, reject) => {
             $http
-                .get(`${FBUrl}/items.json`)
-                .then(data => {
-                    Object.keys(data.data).map(key => {
-                        data.data[key].id = key;
-                    });
-                    resolve(data);
+                .get(`https://ej-to-do.firebaseio.com/items.json`)
+                .then((todoItem) => {
+                    resolve(todoItem.data);
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
             });
         }
@@ -64,7 +64,6 @@ angular.module("TodoApp").factory("ItemFactory", ($q, FBUrl, $http) => {
         });
     });
 }
-
 
     return { getTodoItems, addNewItem };
 });
