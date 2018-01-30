@@ -39,34 +39,32 @@ angular.module("TodoApp").factory("ItemFactory", ($q, FBUrl, $http) => {
     function getTodoItems() {
         return $q((resolve, reject) => {
             $http
-                .get(`https://ej-to-do.firebaseio.com/items.json`)
-                .then((todoItem) => {
-                    resolve(todoItem);
-                })
-                .catch((err) => {
-                    reject(err);
+                .get(`${FBUrl}/items.json`)
+                .then(data => {
+                    Object.keys(data.data).map(key => {
+                        data.data[key].id = key;
+                    });
+                    resolve(data);
                 });
-            
-        
-                
             });
         }
     
     
 
     function addNewItem(todoItem) {
-        // todoItem.id = items.length;
-        // items.push(todoItem);
+        return $q((resolve, reject) => {
         $http.post(`${FBUrl}/items.json`,
           JSON.stringify(todoItem)
         )
         .then( (data) => {
-            console.log("New Item posted", data.data.name);
+            resolve(todoItem);     
         })
         .catch( (error) => {
-            console.log(error);
+            reject(error);
         });
-    }
+    });
+}
+
 
     return { getTodoItems, addNewItem };
 });

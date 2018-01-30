@@ -13,8 +13,13 @@ angular.module("TodoApp").controller("ItemNewCtrl", function ($scope, $location,
     };
 
     $scope.addNewItem = () => {
-        console.log('New Item to Add', $scope.newTask);
-        ItemFactory.addNewItem($scope.newTask);
-        $location.url("/items/list");
+        ItemFactory.addNewItem($scope.newTask)
+        .then(data => {
+            ItemFactory.getTodoItems()
+            .then(allItems => {
+                $location.url("/items/list");
+
+            });
+        });
     };
 });
